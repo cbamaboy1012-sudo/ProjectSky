@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
-using ProjectSky.ViewModels;
 
 namespace ProjectSky.Views
 {
@@ -24,14 +22,16 @@ namespace ProjectSky.Views
         public AbilityBattleComposer()
         {
             InitializeComponent();
-            var abilities = Application.Current.Properties["abilities"] as IEnumerable<string>
-                            ?? new MainWindowViewModel().Abilities;
+            var abilities = Application.Current.Properties["abilities"] as IEnumerable<string> ?? Enumerable.Empty<string>();
             var abilityList = abilities.ToList();
             BaseAbilityBox.ItemsSource = abilityList;
             SourceAbilityBox.ItemsSource = abilityList;
             FeatureBox.ItemsSource = Features;
-            BaseAbilityBox.SelectedIndex = 0;
-            SourceAbilityBox.SelectedIndex = 0;
+            if (abilityList.Count > 0)
+            {
+                BaseAbilityBox.SelectedIndex = 0;
+                SourceAbilityBox.SelectedIndex = 0;
+            }
             FeatureBox.SelectedIndex = 0;
             ComponentsGrid.ItemsSource = _components;
             UpdateSummary();
