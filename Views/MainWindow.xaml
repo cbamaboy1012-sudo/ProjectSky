@@ -26,6 +26,7 @@
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="30"/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
@@ -44,8 +45,9 @@
                 <Button Grid.Column="1" Style="{StaticResource MinimiseHoverButtonStyle}" Foreground="White" Command="{Binding GoBackCommand}" FontFamily="{StaticResource DripIcons}" Content="l" Visibility="{Binding NavigationService.CanGoBack, Converter={StaticResource BooleanToVisibilityConverter}}"/>
                 <Image Source="pack://application:,,,/ProjectSky;component/Assets/Images/sky_logo.png" Height="30" Grid.Column="2"/>
                 <Button Grid.Column="3" Content="Ability Composer" Padding="12,2" Margin="4,2" Click="AbilityComposer_Click" ToolTip="Combine battle-function features from different abilities"/>
-                <Button Grid.Column="4" Style="{StaticResource MinimiseHoverButtonStyle}" Foreground="White" Command="{Binding MinimiseCommand}" FontFamily="{StaticResource DripIcons}" Content="&#xe024;"/>
-                <Button Grid.Column="5" Style="{StaticResource CloseHoverButtonStyle}" Foreground="White" Command="{Binding CloseCommand}" FontFamily="{StaticResource DripIcons}" Content="9"/>
+                <Button Grid.Column="4" Content="Area Randomizer" Padding="12,2" Margin="4,2" Click="AreaRandomizer_Click" ToolTip="Randomize encounter areas globally or independently"/>
+                <Button Grid.Column="5" Style="{StaticResource MinimiseHoverButtonStyle}" Foreground="White" Command="{Binding MinimiseCommand}" FontFamily="{StaticResource DripIcons}" Content="&#xe024;"/>
+                <Button Grid.Column="6" Style="{StaticResource CloseHoverButtonStyle}" Foreground="White" Command="{Binding CloseCommand}" FontFamily="{StaticResource DripIcons}" Content="9"/>
             </Grid>
             <ContentControl Grid.Row="1" Content="{Binding NavigationService.CurrentView}"/>
         </Grid>
