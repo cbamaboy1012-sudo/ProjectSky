@@ -29,11 +29,14 @@ namespace ProjectSky
 
         private void AbilityComposer_Click(object sender, RoutedEventArgs e)
         {
-            var composer = new AbilityBattleComposer
-            {
-                Owner = this
-            };
+            var composer = new AbilityBattleComposer { Owner = this };
             composer.ShowDialog();
+        }
+
+        private void AreaRandomizer_Click(object sender, RoutedEventArgs e)
+        {
+            var randomizer = new AreaRandomizer { Owner = this };
+            randomizer.ShowDialog();
         }
     }
 }
