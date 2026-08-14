@@ -24,15 +24,14 @@ namespace ProjectSky.Views
         public AbilityBattleComposer()
         {
             InitializeComponent();
-            var abilities = MainWindowViewModel.AbilitiesForComposer;
-            BaseAbilityBox.ItemsSource = abilities;
-            SourceAbilityBox.ItemsSource = abilities;
+            var abilities = Application.Current.Properties["abilities"] as IEnumerable<string>
+                            ?? new MainWindowViewModel().Abilities;
+            var abilityList = abilities.ToList();
+            BaseAbilityBox.ItemsSource = abilityList;
+            SourceAbilityBox.ItemsSource = abilityList;
             FeatureBox.ItemsSource = Features;
-            if (abilities.Count > 0)
-            {
-                BaseAbilityBox.SelectedIndex = 0;
-                SourceAbilityBox.SelectedIndex = 0;
-            }
+            BaseAbilityBox.SelectedIndex = 0;
+            SourceAbilityBox.SelectedIndex = 0;
             FeatureBox.SelectedIndex = 0;
             ComponentsGrid.ItemsSource = _components;
             UpdateSummary();
