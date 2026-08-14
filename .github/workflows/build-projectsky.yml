@@ -1,0 +1,35 @@
+name: Build ProjectSky
+
+on:
+  push:
+    branches: [ feature/ability-battle-composer ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 7
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Restore
+        run: dotnet restore ProjectSky.csproj
+
+      - name: Build Release
+        run: dotnet publish ProjectSky.csproj -c Release -r win-x64 --self-contained false -p:PublishSingleFile=false -o publish
+
+      - name: Package
+        shell: pwsh
+        run: Compress-Archive -Path publish\* -DestinationPath ProjectSky-win-x64.zip -Force
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ProjectSky-win-x64
+          path: ProjectSky-win-x64.zip
+          if-no-files-found: error
