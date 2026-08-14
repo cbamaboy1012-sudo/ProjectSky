@@ -31,7 +31,7 @@ namespace ProjectSky.Services
 
             var rng = seed.HasValue ? new Random(seed.Value) : new Random();
             var documents = areaFiles.Select(path => (Path: path, Json: JsonNode.Parse(File.ReadAllText(path)))).ToList();
-            var locations = new List<(JsonNode Node, string Area)>();
+            var locations = new List<(JsonObject Node, string PropertyKey, string Area)>();
 
             foreach (var document in documents)
                 FindTargets(document.Json, propertyName, locations, Path.GetFileNameWithoutExtension(document.Path));
@@ -41,20 +41,20 @@ namespace ProjectSky.Services
 
             if (mode == AreaRandomizationMode.AllAreasTogether)
             {
-                var values = locations.Select(x => GetValue(x.Node, propertyName)!.DeepClone()).ToList();
+                var values = locations.Select(x => x.Node[x.PropertyKey]!.DeepClone()).ToList();
                 Shuffle(values, rng);
                 for (var i = 0; i < locations.Count; i++)
-                    SetValue(locations[i].Node, propertyName, values[i]);
+                    locations[i].Node[locations[i].PropertyKey] = values[i];
             }
             else
             {
                 foreach (var group in locations.GroupBy(x => x.Area))
                 {
-                    var values = group.Select(x => GetValue(x.Node, propertyName)!.DeepClone()).ToList();
+                    var values = group.Select(x => x.Node[x.PropertyKey]!.DeepClone()).ToList();
                     Shuffle(values, rng);
                     var index = 0;
                     foreach (var target in group)
-                        SetValue(target.Node, propertyName, values[index++]);
+                        target.Node[target.PropertyKey] = values[index++];
                 }
             }
 
@@ -72,14 +72,14 @@ namespace ProjectSky.Services
 
         public static IReadOnlyList<string> GetSupportedPropertyNames() => DefaultKeys;
 
-        private static void FindTargets(JsonNode? node, string propertyName, List<(JsonNode Node, string Area)> results, string area)
+        private static void FindTargets(JsonNode? node, string propertyName, List<(JsonObject Node, string PropertyKey, string Area)> results, string area)
         {
             if (node is JsonObject obj)
             {
                 foreach (var property in obj.ToList())
                 {
                     if (string.Equals(property.Key, propertyName, StringComparison.OrdinalIgnoreCase) && property.Value != null)
-                        results.Add((obj, area));
+                        results.Add((obj, property.Key, area));
                     FindTargets(property.Value, propertyName, results, area);
                 }
             }
@@ -89,10 +89,6 @@ namespace ProjectSky.Services
                     FindTargets(item, propertyName, results, area);
             }
         }
-
-        private static JsonNode? GetValue(JsonNode node, string propertyName) => ((JsonObject)node)[propertyName];
-
-        private static void SetValue(JsonNode node, string propertyName, JsonNode value) => ((JsonObject)node)[propertyName] = value;
 
         private static void Shuffle<T>(IList<T> values, Random rng)
         {
